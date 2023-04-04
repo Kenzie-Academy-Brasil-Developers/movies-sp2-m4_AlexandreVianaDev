@@ -1,0 +1,33 @@
+{
+  "name": "movies-sp2-m4_alexandrevianadev",
+  "version": "1.0.0",
+  "description": "Hoje você recebeu uma demanda inesperada. O gestor de uma _locadora de filmes_ entrou em contato solicitando seus serviços. O objetivo é elaborar uma API que será utilizada em uma plataforma de streaming. Essa API terá o intuito de gerenciar a coleção de filmes disponíveis.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --ignore-watch=node_modules --cls --rs src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kenzie-Academy-Brasil-Developers/movies-sp2-m4_AlexandreVianaDev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kenzie-Academy-Brasil-Developers/movies-sp2-m4_AlexandreVianaDev/issues"
+  },
+  "homepage": "https://github.com/Kenzie-Academy-Brasil-Developers/movies-sp2-m4_AlexandreVianaDev#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.10.0",
+    "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/pg": "^8.6.6",
+    "@types/pg-format": "^1.0.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.3"
+  }
+}
