@@ -9,6 +9,6 @@ app.use(express.json());
 const PORT: number = 3000;
 const runningMsg = `Server is running on http://localhost:${PORT}`;
 app.listen(PORT, async () => {
-    await startDatabase()
+  await startDatabase();
   console.log(runningMsg);
 });
