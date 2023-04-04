@@ -4,7 +4,10 @@ import format from "pg-format";
 import { IMovie, TMovieResult } from "./interfaces";
 import { client } from "./database";
 
-const insertQuery = async (req: Request, res: Response): Promise<Response> => {
+export const insertQuery = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { body: payload } = req;
   const queryString: string = `
     INSERT INTO movies
@@ -26,7 +29,7 @@ const insertQuery = async (req: Request, res: Response): Promise<Response> => {
 };
 
 // insertQueryFormat
-const insertQueryFormat = async (
+export const insertQueryFormat = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
