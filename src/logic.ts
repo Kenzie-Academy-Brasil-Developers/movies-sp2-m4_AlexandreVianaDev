@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { QueryConfig, QueryResult } from "pg";
+import { QueryConfig } from "pg";
 import format from "pg-format";
-import { IMovie, TMovieCreate, TMovieResult } from "./interfaces";
+import { IMovie, TMovieResult } from "./interfaces";
 import { client } from "./database";
 
 export const insertQuery = async (
@@ -55,8 +55,7 @@ export const retrieveMovies = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const category: any | undefined = req.query.category?.toString();
-  console.log(category);
+  const category: any | undefined = req.query.category;
 
   if (category?.length > 0) {
     const queryString: string = `
@@ -75,8 +74,9 @@ export const retrieveMovies = async (
 
     if (movies?.length === 0) {
       const queryString: string = `
-        SELECT * FROM movies;
-      `;
+        SELECT *
+        FROM movies;
+    `;
 
       const queryResult: TMovieResult = await client.query(queryString);
       const movies: Array<IMovie> = queryResult.rows;
@@ -88,8 +88,9 @@ export const retrieveMovies = async (
   }
 
   const queryString: string = `
-    SELECT * FROM movies;
-    `;
+    SELECT *
+    FROM movies;
+  `;
 
   const queryResult: TMovieResult = await client.query(queryString);
   const movies: Array<IMovie> = queryResult.rows;
@@ -106,15 +107,15 @@ export const retrieveMovieById = async (
     SELECT *
     FROM movies
     WHERE id = $1;
-    `;
+  `;
 
   const queryConfig: QueryConfig = {
     text: queryString,
     values: [id],
   };
 
-  const queryResult = await client.query(queryConfig);
-  const movie = queryResult.rows[0];
+  const queryResult: TMovieResult = await client.query(queryConfig);
+  const movie: IMovie = queryResult.rows[0];
 
   return res.json(movie);
 };
@@ -134,7 +135,7 @@ export const updateMovie = async (
       SET (%I) = ROW(%L)
       WHERE id = $1
       RETURNING *;
-      `;
+    `;
 
   const queryFormat: string = format(
     queryTemplate,
@@ -147,7 +148,7 @@ export const updateMovie = async (
     values: [id],
   };
 
-  const queryResult: QueryResult = await client.query(queryConfig);
+  const queryResult: TMovieResult = await client.query(queryConfig);
 
   return res.json(queryResult.rows[0]);
 };
@@ -161,14 +162,14 @@ export const deleteMovie = async (
     DELETE FROM movies
     WHERE id = $1
     RETURNING *;
-    `;
+  `;
 
   const queryConfig: QueryConfig = {
     text: queryString,
     values: [id],
   };
 
-  const queryResult: QueryResult = await client.query(queryConfig);
+  const queryResult: TMovieResult = await client.query(queryConfig);
 
   return res.status(204).send();
 };

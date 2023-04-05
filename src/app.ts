@@ -13,9 +13,13 @@ const app: Application = express();
 app.use(express.json());
 
 app.post("/movies", verifyIfNameExists, insertMoviesFormat);
+
 app.get("/movies", retrieveMovies);
+
 app.get("/movies/:id", verifyIfIdExists, retrieveMovieById);
+
 app.patch("/movies/:id", verifyIfIdExists, verifyIfNameExists, updateMovie);
+
 app.delete("/movies/:id", verifyIfIdExists, deleteMovie);
 
 const PORT: number = 3000;

@@ -8,7 +8,7 @@ export const client: Client = new Client({
   port: 5432,
 });
 
-export const startDatabase = async () : Promise<void> => {
+export const startDatabase = async (): Promise<void> => {
   await client.connect();
   console.log("Database connected.");
 };

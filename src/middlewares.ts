@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { IMovie, TMovieCreate, TMovieResult } from "./interfaces";
-import format from "pg-format";
+import { IMovie } from "./interfaces";
 import { client } from "./database";
 import { QueryConfig, QueryResult } from "pg";
 
@@ -15,7 +14,7 @@ export const verifyIfNameExists = async (
       SELECT *
       FROM movies
       WHERE name = $1;
-      `;
+  `;
 
   const queryConfig: QueryConfig = {
     text: queryString,
@@ -24,18 +23,12 @@ export const verifyIfNameExists = async (
 
   const queryResult: QueryResult = await client.query(queryConfig);
 
-  //   const queryResult: QueryResult<TMovieResult> = await client.query(
-  //     queryConfig
-  //   );
-
-  //   const movies: TMovieResult[] = queryResult.rows;
   if (queryResult.rowCount > 0) {
     return res.status(409).json({
       error: "Movie name already exists!",
     });
   }
 
-  //   res.locals.movies = movies;
   return next();
 };
 
@@ -49,7 +42,7 @@ export const verifyIfIdExists = async (
       SELECT *
       FROM movies
       WHERE id = $1;
-      `;
+  `;
 
   const queryConfig: QueryConfig = {
     text: queryString,
