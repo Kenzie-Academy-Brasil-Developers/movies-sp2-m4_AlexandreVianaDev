@@ -29,16 +29,13 @@ export const verifyIfNameExists = async (
   //   );
 
   //   const movies: TMovieResult[] = queryResult.rows;
-
   if (queryResult.rowCount > 0) {
-    console.log("nome do filme utilizado");
     return res.status(409).json({
       error: "Movie name already exists!",
     });
   }
 
   //   res.locals.movies = movies;
-  console.log("nome do filme não utilizado");
   return next();
 };
 

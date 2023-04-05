@@ -55,6 +55,38 @@ export const retrieveMovies = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
+  const category: any | undefined = req.query.category?.toString();
+  console.log(category);
+
+  if (category?.length > 0) {
+    const queryString: string = `
+      SELECT *
+      FROM movies
+      WHERE category = $1;
+    `;
+
+    const queryConfig: QueryConfig = {
+      text: queryString,
+      values: [category],
+    };
+
+    const queryResult: TMovieResult = await client.query(queryConfig);
+    const movies: Array<IMovie> = queryResult.rows;
+
+    if (movies?.length === 0) {
+      const queryString: string = `
+        SELECT * FROM movies;
+      `;
+
+      const queryResult: TMovieResult = await client.query(queryString);
+      const movies: Array<IMovie> = queryResult.rows;
+
+      return res.json(movies);
+    }
+
+    return res.json(movies);
+  }
+
   const queryString: string = `
     SELECT * FROM movies;
     `;
@@ -69,7 +101,7 @@ export const retrieveMovieById = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { id } = req.params;
+  const id: number = res.locals.id;
   const queryString: string = `
     SELECT *
     FROM movies
@@ -93,25 +125,31 @@ export const updateMovie = async (
 ): Promise<Response | void> => {
   const { body: payload } = req;
   const id: number = res.locals.id;
-  const queryString: string = format(
-    `
-    UPDATE movies
-    SET (%I) = (%L)
-    WHERE id = $1
-    RETURNING *;
-    `,
-    Object.keys(payload),
-    Object.values(payload)
+
+  const updateColumns: string[] = Object.keys(payload);
+  const updateValues: string[] = Object.values(payload);
+
+  const queryTemplate: string = `
+      UPDATE movies
+      SET (%I) = ROW(%L)
+      WHERE id = $1
+      RETURNING *;
+      `;
+
+  const queryFormat: string = format(
+    queryTemplate,
+    updateColumns,
+    updateValues
   );
 
   const queryConfig: QueryConfig = {
-    text: queryString,
+    text: queryFormat,
     values: [id],
   };
 
   const queryResult: QueryResult = await client.query(queryConfig);
 
-  return res.json(queryResult);
+  return res.json(queryResult.rows[0]);
 };
 
 export const deleteMovie = async (
@@ -120,8 +158,7 @@ export const deleteMovie = async (
 ): Promise<Response> => {
   const id: number = res.locals.id;
   const queryString: string = `
-    UPDATE movies
-    SET (%I) = (%L)
+    DELETE FROM movies
     WHERE id = $1
     RETURNING *;
     `;
@@ -133,5 +170,5 @@ export const deleteMovie = async (
 
   const queryResult: QueryResult = await client.query(queryConfig);
 
-  return res.send();
+  return res.status(204).send();
 };

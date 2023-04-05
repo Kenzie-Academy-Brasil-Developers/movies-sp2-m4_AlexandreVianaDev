@@ -16,7 +16,7 @@ app.post("/movies", verifyIfNameExists, insertMoviesFormat);
 app.get("/movies", retrieveMovies);
 app.get("/movies/:id", verifyIfIdExists, retrieveMovieById);
 app.patch("/movies/:id", verifyIfIdExists, verifyIfNameExists, updateMovie);
-app.delete("/movies/:id", deleteMovie);
+app.delete("/movies/:id", verifyIfIdExists, deleteMovie);
 
 const PORT: number = 3000;
 const runningMsg = `Server is running on http://localhost:${PORT}`;
