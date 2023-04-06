@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { QueryConfig } from "pg";
 import format from "pg-format";
-import { IMovie, TMovieResult } from "./interfaces";
+import { IMovie, TMovieCreate, TMovieResult } from "./interfaces";
 import { client } from "./database";
 
 export const insertMoviesFormat = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { body: payload } = req;
+  const movieData: TMovieCreate = req.body;
   const queryString: string = format(
     `
       INSERT INTO movies
@@ -17,8 +17,8 @@ export const insertMoviesFormat = async (
           (%L)
       RETURNING *;
     `,
-    Object.keys(payload),
-    Object.values(payload)
+    Object.keys(movieData),
+    Object.values(movieData)
   );
 
   const queryResult: TMovieResult = await client.query(queryString);
@@ -100,11 +100,11 @@ export const updateMovie = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
-  const { body: payload } = req;
+  const movieData: Partial<TMovieCreate> = req.body;
   const id: number = res.locals.id;
 
-  const updateColumns: string[] = Object.keys(payload);
-  const updateValues: string[] = Object.values(payload);
+  const updateColumns: string[] = Object.keys(movieData);
+  const updateValues: (string | number)[] = Object.values(movieData);
 
   const queryTemplate: string = `
       UPDATE movies
